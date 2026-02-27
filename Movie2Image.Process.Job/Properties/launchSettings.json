@@ -1,0 +1,18 @@
+{
+	"profiles": {
+		"Console": {
+			"commandName": "Project",
+			"environmentVariables": {
+				"RABBITMQ_CONNECTION": "hostname=localhost;port=5672;username=mv2img;password=665e7bd63b134ada94b70e718a537fd0",
+				"ZIP_PATH": "/home/zip_path",
+				"FRAMES_PATH": "/home/frames_path",
+				"QUEUE_LIST": "",
+				"ERROR_MAX_RETRIES": "3",
+				"LOAD_SERVICE_URL": "http://load-api",
+				"AUTH_SERVICE_URL": "http://auth-api",
+				"CLIENT_ID": "process",
+				"CLIENT_SECRET": "7cafafaca4c14407889b0cd40ee84735"
+			}
+		}
+	}
+}

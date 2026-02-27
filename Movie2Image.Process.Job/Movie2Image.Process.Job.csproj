@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Movie2Image.Process.Application\Movie2Image.Process.Application.csproj" />
+    <ProjectReference Include="..\Movie2Image.Process.Controller\Movie2Image.Process.Controller.csproj" />
+    <ProjectReference Include="..\Movie2Image.Process.ExternalServices\Movie2Image.Process.ExternalServices.csproj" />
+    <ProjectReference Include="..\Movie2Image.Process.Instrumentalization\Movie2Image.Process.Instrumentalization.csproj" />
+    <ProjectReference Include="..\Movie2Image.Process.Logging\Movie2Image.Process.Logging.csproj" />
+    <ProjectReference Include="..\Movie2Image.Process.Media\Movie2Image.Process.Media.csproj" />
+    <ProjectReference Include="..\Movie2Image.Process.Queue\Movie2Image.Process.Queue.csproj" />
+    <ProjectReference Include="..\Movie2Image.Process.Storage\Movie2Image.Process.Storage.csproj" />
+    <ProjectReference Include="..\Movie2Image.Process.Zip\Movie2Image.Process.Zip.csproj" />
+  </ItemGroup>
+
+</Project>
