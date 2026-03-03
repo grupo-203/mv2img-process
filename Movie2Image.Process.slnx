@@ -19,6 +19,7 @@
     <Project Path="Movie2Image.Process.Domain/Movie2Image.Process.Domain.csproj" Id="19d8c18e-f096-426d-8b06-20fce943aeb8" />
   </Folder>
   <Folder Name="/publish/">
+    <File Path=".github/workflows/develop-build-test.yml" />
     <File Path="Dockerfile" />
   </Folder>
   <Folder Name="/test/">
