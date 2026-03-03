@@ -35,7 +35,7 @@ public class AuthService(
 	{
 		using var http = new HttpClient();
 
-		var message = new HttpRequestMessage(HttpMethod.Get, $"{baseUrl}/user/{id}");
+		var message = new HttpRequestMessage(HttpMethod.Get, $"{baseUrl}/users/{id}");
 
 		message.Headers.Authorization = await Login();
 
