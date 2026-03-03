@@ -24,7 +24,7 @@ public class TempZipPathSetServiceTest : TestBase
 
 		// Assert
 		data.Should().NotBeNull();
-		data.TempZipPath.Should().Be(@"C:\temp\frames\frames_123.zip");
+		data.TempZipPath.Should().Be(Path.Combine(@"C:\temp\frames", "frames_123.zip"));
 	}
 
 	[Theory]
