@@ -19,6 +19,7 @@
     <ProjectReference Include="..\Movie2Image.Process.ExternalServices\Movie2Image.Process.ExternalServices.csproj" />
     <ProjectReference Include="..\Movie2Image.Process.Instrumentalization\Movie2Image.Process.Instrumentalization.csproj" />
     <ProjectReference Include="..\Movie2Image.Process.Logging\Movie2Image.Process.Logging.csproj" />
+    <ProjectReference Include="..\Movie2Image.Process.Mail\Movie2Image.Process.Mail.csproj" />
     <ProjectReference Include="..\Movie2Image.Process.Media\Movie2Image.Process.Media.csproj" />
     <ProjectReference Include="..\Movie2Image.Process.Queue\Movie2Image.Process.Queue.csproj" />
     <ProjectReference Include="..\Movie2Image.Process.Storage\Movie2Image.Process.Storage.csproj" />

@@ -22,11 +22,6 @@ public class ProcessMovieDto
 	public int Tries { get; set; }
 
 
-	public void RestartTries() => Tries = 0;
-
-	public void AddTry() => Tries++;
-
-
 	public ProcessMovieDto() { }
 
 	public ProcessMovieDto(RequestDto data)

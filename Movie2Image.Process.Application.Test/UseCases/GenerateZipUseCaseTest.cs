@@ -18,9 +18,14 @@ public class GenerateZipUseCaseTest : TestBase
 		var pathSetter = new Mock<ITempZipPathSetService>();
 		var zip = new Mock<IZipCreate>();
 		var useCase = new GenerateZipUseCase(pathSetter.Object, zip.Object);
+		var framesPath = Faker.System.DirectoryPath();
 		var data = new ProcessMovieDto
 		{
-			FramesPath = Faker.System.DirectoryPath()
+			Id = Faker.Random.Guid().ToString(),
+			UserId = Faker.Random.Guid().ToString(),
+			MoviePath = Faker.System.FilePath(),
+			FramesPath = framesPath,
+			Status = "FramesExtracted"
 		};
 		pathSetter.Setup(x => x.Set(data)).Callback(() =>
 			data.TempZipPath = Faker.System.FilePath());
@@ -29,8 +34,9 @@ public class GenerateZipUseCaseTest : TestBase
 		await useCase.Process(data);
 
 		// Assert
-		zip.Verify(x => x.Create(data.FramesPath, data.TempZipPath!), Times.Once);
-		data.Status.Should().Be("Zip Generated");
+		zip.Verify(x => x.Create(framesPath, data.TempZipPath!), Times.Once);
+		data.Status.Should().Be("Compressing");
+		data.TempZipPath.Should().NotBeNullOrEmpty();
 	}
 
 	[Fact]
@@ -45,7 +51,8 @@ public class GenerateZipUseCaseTest : TestBase
 		var act = () => useCase.Process(null!);
 
 		// Assert
-		await act.Should().ThrowAsync<ValidationException>();
+		await act.Should().ThrowAsync<ValidationException>()
+			.WithMessage("*Invalid data: Id, UserId and MoviePath are required*");
 	}
 
 	[Theory]
@@ -58,13 +65,20 @@ public class GenerateZipUseCaseTest : TestBase
 		var pathSetter = new Mock<ITempZipPathSetService>();
 		var zip = new Mock<IZipCreate>();
 		var useCase = new GenerateZipUseCase(pathSetter.Object, zip.Object);
-		var data = new ProcessMovieDto { FramesPath = value };
+		var data = new ProcessMovieDto
+		{
+			Id = Faker.Random.Guid().ToString(),
+			UserId = Faker.Random.Guid().ToString(),
+			MoviePath = Faker.System.FilePath(),
+			FramesPath = value
+		};
 
 		// Act
 		var act = () => useCase.Process(data);
 
 		// Assert
-		await act.Should().ThrowAsync<ValidationException>();
+		await act.Should().ThrowAsync<InvalidOperationException>()
+			.WithMessage("Cannot start compression from current status*");
 	}
 
 }

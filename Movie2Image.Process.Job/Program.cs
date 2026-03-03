@@ -7,6 +7,7 @@ using Movie2Image.Process.ExternalServices;
 using Movie2Image.Process.Instrumentalization;
 using Movie2Image.Process.Job;
 using Movie2Image.Process.Logging;
+using Movie2Image.Process.Mail;
 using Movie2Image.Process.Media;
 using Movie2Image.Process.Queue;
 using Movie2Image.Process.Storage;
@@ -26,6 +27,7 @@ var services = new ServiceCollection()
 	.AddMedia()
 	.AddZip()
 	.AddStorage()
+	.AddMail()
 	.AddQueues()
 	.AddExternalServices()
 	.AddApplication()

@@ -9,6 +9,7 @@
     <Project Path="Movie2Image.Process.ExternalServices/Movie2Image.Process.ExternalServices.csproj" Id="d8b71383-73fa-4676-8da7-e43c51207ef4" />
     <Project Path="Movie2Image.Process.Instrumentalization/Movie2Image.Process.Instrumentalization.csproj" Id="d203a805-8d9b-43a6-be55-b882fd34c0c1" />
     <Project Path="Movie2Image.Process.Logging/Movie2Image.Process.Logging.csproj" Id="81edb6cf-ae1f-4814-82a1-09eb0386195c" />
+    <Project Path="Movie2Image.Process.Mail/Movie2Image.Process.Mail.csproj" Id="0da65db6-6619-4a0c-ac22-29d387d1628b" />
     <Project Path="Movie2Image.Process.Media/Movie2Image.Process.Media.csproj" Id="9a88df8a-c903-432b-87d5-f18b42897f5c" />
     <Project Path="Movie2Image.Process.Storage/Movie2Image.Process.Storage.csproj" Id="24a3dbd1-3029-4301-8261-bde9ac018211" />
     <Project Path="Movie2Image.Process.Zip/Movie2Image.Process.Zip.csproj" Id="424723d6-3037-4324-9a27-d15aa564324b" />
@@ -22,5 +23,6 @@
   </Folder>
   <Folder Name="/test/">
     <Project Path="Movie2Image.Process.Application.Test/Movie2Image.Process.Application.Test.csproj" Id="3424adda-bb32-490c-9473-1348ece1d822" />
+    <Project Path="Movie2Image.Process.Domain.Test/Movie2Image.Process.Domain.Test.csproj" Id="7f0e4a40-640f-4ea8-8810-613a747aaaac" />
   </Folder>
 </Solution>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Movie2Image.Process.Application.DTO;
+using Movie2Image.Process.Application.Mappers;
 using Movie2Image.Process.Application.Ports.Core.UseCases;
 
 namespace Movie2Image.Process.Application.UseCases;
@@ -14,13 +15,31 @@ public class ProcessErrorUseCase(
 	{
 		if (data == null || ex == null)
 			return false;
-		if (data.Tries >= maxRetries)
+
+		// Converter DTO para entidade de domínio
+		var processingJob = data.ToDomain();
+
+		// Verificar se pode tentar novamente
+		if (!processingJob.CanRetry())
 			return false;
 
-		data.AddTry();
-		data.LastException = ex;
+		// Incrementar tentativa e marcar falha
+		try
+		{
+			processingJob.IncrementTry();
+			processingJob.Fail(ex);
 
-		return true;
+			// Atualizar DTO com estado da entidade
+			data.Tries = processingJob.Tries;
+			data.LastException = processingJob.LastException;
+			data.Status = processingJob.Status.ToString();
+
+			return true;
+		}
+		catch
+		{
+			return false;
+		}
 	}
 
 }

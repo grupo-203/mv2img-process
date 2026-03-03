@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Movie2Image.Process.Application.DTO;
+using Movie2Image.Process.Application.Mappers;
 using Movie2Image.Process.Application.Ports.Core.UseCases;
 using Movie2Image.Process.Application.Ports.Input.Controller;
 using Movie2Image.Process.Application.Ports.Input.Queue;
@@ -15,12 +16,17 @@ public class GenerateZipController(
 	IQueueNames queues) : IGenerateZipController
 {
 
-    public async Task Process(ProcessMovieDto data)
-    {
+	public async Task Process(ProcessMovieDto data)
+	{
 		try
 		{
 			await useCase.Process(data);
-			data.RestartTries();
+
+			// Resetar tentativas através da entidade de domínio
+			var processingJob = data.ToDomain();
+			processingJob.ResetTries();
+			data.Tries = processingJob.Tries;
+
 			await publisher.Publish(queues.Publish, data);
 		}
 		catch (Exception ex)

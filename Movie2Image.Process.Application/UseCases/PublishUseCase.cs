@@ -1,8 +1,9 @@
 ﻿using Movie2Image.Process.Application.DTO;
+using Movie2Image.Process.Application.Mappers;
 using Movie2Image.Process.Application.Ports.Core.Services;
 using Movie2Image.Process.Application.Ports.Core.UseCases;
 using Movie2Image.Process.Application.Ports.Output.Storage;
-using Movie2Image.Process.Domain.Validation;
+using Movie2Image.Process.Domain.ValueObjects;
 
 namespace Movie2Image.Process.Application.UseCases;
 
@@ -14,21 +15,35 @@ public class PublishUseCase(
 
 	public async Task Process(ProcessMovieDto data)
 	{
-		Validator.Create()
-			.Test(!string.IsNullOrWhiteSpace(data?.TempZipPath), "Invalid Temp Zip Path")
-			.Validate();
+		// Converter DTO para entidade de domínio
+		var processingJob = data.ToDomain();
 
-		Validator.Create()
-			.Test(File.Exists(data?.TempZipPath), "Temp Zip File Not Exists")
-			.Validate();
+		// Validar que o arquivo temporário existe
+		if (string.IsNullOrWhiteSpace(data.TempZipPath) || !File.Exists(data.TempZipPath))
+		{
+			throw new InvalidOperationException("Temp zip file does not exist");
+		}
 
-		pathSetter.Set(data!);
+		// Configurar caminho do zip final
+		pathSetter.Set(data);
 
-		using (var file = File.OpenRead(data!.TempZipPath!))
-			 await storage.UploadFile(file, data.ZipPath!);
+		// Upload do arquivo
+		using (var file = File.OpenRead(data.TempZipPath))
+			await storage.UploadFile(file, data.ZipPath!);
 
+		// Completar compressão com o caminho final
+		var zipPath = ZipPath.Create(data.ZipPath);
+		processingJob.CompleteCompression(zipPath);
+
+		// Limpar arquivos temporários
 		await cleanner.Clean(data);
-		data.Status = "Published";
+
+		// Completar o processamento
+		processingJob.Complete();
+
+		// Atualizar DTO com estado da entidade
+		data.Status = processingJob.Status.ToString();
+		data.ZipPath = processingJob.ZipPath?.Value;
 	}
 
 }

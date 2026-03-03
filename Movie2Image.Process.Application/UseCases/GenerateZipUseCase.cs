@@ -1,8 +1,9 @@
 ﻿using Movie2Image.Process.Application.DTO;
+using Movie2Image.Process.Application.Mappers;
 using Movie2Image.Process.Application.Ports.Core.Services;
 using Movie2Image.Process.Application.Ports.Core.UseCases;
 using Movie2Image.Process.Application.Ports.Output.Zip;
-using Movie2Image.Process.Domain.Validation;
+using Movie2Image.Process.Domain.ValueObjects;
 
 namespace Movie2Image.Process.Application.UseCases;
 
@@ -13,14 +14,25 @@ public class GenerateZipUseCase(
 
 	public async Task Process(ProcessMovieDto data)
 	{
-		Validator.Create()
-			.Test(!string.IsNullOrWhiteSpace(data?.FramesPath), "Invalid Frames Path")
-			.Validate();
+		// Converter DTO para entidade de domínio
+		var processingJob = data.ToDomain();
 
-		pathSetter.Set(data!);
+		// Iniciar compressão
+		processingJob.StartCompression();
 
-		await zip.Create(data!.FramesPath!, data.TempZipPath!);
-		data.Status = "Zip Generated";
+		// Configurar caminhos
+		pathSetter.Set(data);
+
+		// Criar zip
+		await zip.Create(processingJob.FramesPath!.Value, data.TempZipPath!);
+
+		// Completar compressão
+		var zipPath = ZipPath.Create(data.TempZipPath);
+		processingJob.SetTempZipPath(zipPath);
+
+		// Atualizar DTO com estado da entidade
+		data.Status = processingJob.Status.ToString();
+		data.TempZipPath = processingJob.TempZipPath?.Value;
 	}
 
 }

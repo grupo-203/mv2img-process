@@ -19,9 +19,14 @@ public class PublishUseCaseTest : TestBase
 		var storage = new Mock<IStorage>();
 		var cleanner = new Mock<ITempCleanService>();
 		var useCase = new PublishUseCase(pathSetter.Object, storage.Object, cleanner.Object);
+		var tempZipPath = GetTempFile();
 		var data = new ProcessMovieDto
 		{
-			TempZipPath = GetTempFile()
+			Id = Faker.Random.Guid().ToString(),
+			UserId = Faker.Random.Guid().ToString(),
+			MoviePath = Faker.System.FilePath(),
+			TempZipPath = tempZipPath,
+			Status = "Compressed"
 		};
 		var file = Path.GetFileName(data.TempZipPath);
 		var zipPath = Path.Combine(Faker.System.DirectoryPath(), file);
@@ -35,7 +40,8 @@ public class PublishUseCaseTest : TestBase
 		pathSetter.Verify(x => x.Set(data), Times.Once);
 		storage.Verify(x => x.UploadFile(It.IsAny<Stream>(), zipPath), Times.Once);
 		cleanner.Verify(x => x.Clean(data), Times.Once);
-		data.Status.Should().Be("Published");
+		data.Status.Should().Be("Completed");
+		data.ZipPath.Should().Be(zipPath);
 	}
 
 	[Fact]
@@ -51,7 +57,8 @@ public class PublishUseCaseTest : TestBase
 		var act = () => useCase.Process(null!);
 
 		// Assert
-		await act.Should().ThrowAsync<ValidationException>();
+		await act.Should().ThrowAsync<ValidationException>()
+			.WithMessage("*Invalid data: Id, UserId and MoviePath are required*");
 	}
 
 	[Theory]
@@ -67,6 +74,9 @@ public class PublishUseCaseTest : TestBase
 		var useCase = new PublishUseCase(pathSetter.Object, storage.Object, cleanner.Object);
 		var data = new ProcessMovieDto
 		{
+			Id = Faker.Random.Guid().ToString(),
+			UserId = Faker.Random.Guid().ToString(),
+			MoviePath = Faker.System.FilePath(),
 			TempZipPath = value
 		};
 
@@ -74,7 +84,8 @@ public class PublishUseCaseTest : TestBase
 		var act = () => useCase.Process(data);
 
 		// Assert
-		await act.Should().ThrowAsync<ValidationException>();
+		await act.Should().ThrowAsync<InvalidOperationException>()
+			.WithMessage("Temp zip file does not exist");
 	}
 
 	[Fact]
@@ -87,6 +98,9 @@ public class PublishUseCaseTest : TestBase
 		var useCase = new PublishUseCase(pathSetter.Object, storage.Object, cleanner.Object);
 		var data = new ProcessMovieDto
 		{
+			Id = Faker.Random.Guid().ToString(),
+			UserId = Faker.Random.Guid().ToString(),
+			MoviePath = Faker.System.FilePath(),
 			TempZipPath = Faker.System.FilePath()
 		};
 
@@ -94,7 +108,8 @@ public class PublishUseCaseTest : TestBase
 		var act = () => useCase.Process(data);
 
 		// Assert
-		await act.Should().ThrowAsync<ValidationException>();
+		await act.Should().ThrowAsync<InvalidOperationException>()
+			.WithMessage("Temp zip file does not exist");
 	}
 
 }
