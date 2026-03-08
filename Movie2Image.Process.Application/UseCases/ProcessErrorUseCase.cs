@@ -1,15 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
-using Movie2Image.Process.Application.DTO;
+﻿using Movie2Image.Process.Application.DTO;
 using Movie2Image.Process.Application.Mappers;
 using Movie2Image.Process.Application.Ports.Core.UseCases;
+using Movie2Image.Process.Application.Ports.Input;
 
 namespace Movie2Image.Process.Application.UseCases;
 
 public class ProcessErrorUseCase(
-	IConfiguration config) : IProcessErrorUseCase
+	IProcessConfiguration config) : IProcessErrorUseCase
 {
-
-	private readonly int maxRetries = Convert.ToInt32(config["ERROR_MAX_RETRIES"] ?? "3");
 
 	public async Task<bool> Process(ProcessMovieDto data, Exception ex)
 	{
@@ -20,7 +18,7 @@ public class ProcessErrorUseCase(
 		var processingJob = data.ToDomain();
 
 		// Verificar se pode tentar novamente
-		if (!processingJob.CanRetry())
+		if (!processingJob.CanRetry(config.maxRetries))
 			return false;
 
 		// Incrementar tentativa e marcar falha

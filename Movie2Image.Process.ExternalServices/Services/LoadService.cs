@@ -1,23 +1,19 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Movie2Image.Process.Application.Ports.Input;
 using Movie2Image.Process.Application.Ports.Output.ExternalServices;
 using System.Net.Http.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Movie2Image.Process.ExternalServices.Services;
 
 public class LoadService(
 	IAuthService auth,
-	IConfiguration config) : ILoadService
+	IProcessConfiguration config) : ILoadService
 {
-
-	private readonly string baseUrl = config["LOAD_SERVICE_URL"] 
-		?? throw new ArgumentNullException("LOAD_SERVICE_URL");
 
 	public async Task StartProcess(string id)
 	{
 		using var http = new HttpClient();
 
-		var message = new HttpRequestMessage(HttpMethod.Post, $"{baseUrl}/start");
+		var message = new HttpRequestMessage(HttpMethod.Post, $"{config.LoadServiceUrl}/start");
 
 		message.Headers.Authorization = await auth.Login();
 		message.Content = JsonContent.Create(new { id });
@@ -31,7 +27,7 @@ public class LoadService(
 	{
 		using var http = new HttpClient();
 
-		var message = new HttpRequestMessage(HttpMethod.Post, $"{baseUrl}/finish");
+		var message = new HttpRequestMessage(HttpMethod.Post, $"{config.LoadServiceUrl}/finish");
 
 		message.Headers.Authorization = await auth.Login();
 		message.Content = JsonContent.Create(new { id, zipPath });
@@ -45,7 +41,7 @@ public class LoadService(
 	{
 		using var http = new HttpClient();
 
-		var message = new HttpRequestMessage(HttpMethod.Post, $"{baseUrl}/error");
+		var message = new HttpRequestMessage(HttpMethod.Post, $"{config.LoadServiceUrl}/error");
 		message.Headers.Authorization = await auth.Login();
 		message.Content = JsonContent.Create(new { id });
 

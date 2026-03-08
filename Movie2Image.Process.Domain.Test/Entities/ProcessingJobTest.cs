@@ -202,7 +202,7 @@ public class ProcessingJobTest : TestBase
 		var job = CreateJob();
 		job.IncrementTry();
 
-		var result = job.CanRetry();
+		var result = job.CanRetry(3);
 
 		result.Should().BeTrue();
 	}
@@ -215,7 +215,7 @@ public class ProcessingJobTest : TestBase
 		job.IncrementTry();
 		job.IncrementTry();
 
-		var result = job.CanRetry();
+		var result = job.CanRetry(3);
 
 		result.Should().BeFalse();
 	}

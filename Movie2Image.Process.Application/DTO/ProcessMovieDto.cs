@@ -19,7 +19,9 @@ public class ProcessMovieDto
 
 	public Exception? LastException { get; set; }
 
-	public int Tries { get; set; }
+	public int MaxRetries { get; set; }
+
+    public int Tries { get; set; }
 
 
 	public ProcessMovieDto() { }

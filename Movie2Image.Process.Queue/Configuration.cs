@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Movie2Image.Process.Application.Ports.Input;
 using Movie2Image.Process.Application.Ports.Input.Queue;
 using Movie2Image.Process.Application.Ports.Output.Queue;
 using Movie2Image.Process.Logging;
@@ -37,10 +38,8 @@ public static class Configuration
 
 			logger.LogInformation("Trying to create a RabbitMQ connection");
 
-			var config = provider.GetRequiredService<IConfiguration>();
-			var connectionString = config["RABBITMQ_CONNECTION"]
-				?? throw new ArgumentNullException("RABBITMQ_CONNECTION");
-			var factory = GetFactory(connectionString);
+			var config = provider.GetRequiredService<IProcessConfiguration>();
+			var factory = GetFactory(config.RabbitMQConnectionString);
 			var connection = factory.CreateConnectionAsync().Result;
 
 			logger.LogInformation("RabbitMQ connection created");

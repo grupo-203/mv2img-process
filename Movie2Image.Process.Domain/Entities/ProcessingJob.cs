@@ -1,12 +1,10 @@
 using Movie2Image.Process.Domain.Enums;
-using Movie2Image.Process.Domain.Exceptions;
 using Movie2Image.Process.Domain.ValueObjects;
 
 namespace Movie2Image.Process.Domain.Entities;
 
 public class ProcessingJob
 {
-	private const int MaxRetries = 3;
 
 	public ProcessingJobId Id { get; private set; }
 	public UserId UserId { get; private set; }
@@ -75,11 +73,6 @@ public class ProcessingJob
 	public void IncrementTry()
 	{
 		Tries++;
-
-		if (Tries > MaxRetries)
-		{
-			throw new MaxRetriesExceededException($"Maximum retry attempts ({MaxRetries}) exceeded for processing job {Id}");
-		}
 	}
 
 	public void ResetTries()
@@ -87,7 +80,7 @@ public class ProcessingJob
 		Tries = 0;
 	}
 
-	public bool CanRetry() => Tries < MaxRetries;
+	public bool CanRetry(int maxRetries) => Tries < maxRetries;
 
 	private void ValidateStatus(ProcessingStatus expectedStatus, string errorMessage)
 	{

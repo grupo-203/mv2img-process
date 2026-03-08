@@ -1,25 +1,22 @@
 ﻿using FFMpegCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Movie2Image.Process.Application.Ports.Input;
 using Movie2Image.Process.Application.Ports.Output.Media;
 
 namespace Movie2Image.Process.Media.FFMPEG;
 
 public class FfmpegMovieIntoImagesTransform(
 	ILogger<FfmpegMovieIntoImagesTransform> logger,
-    IConfiguration config) : IMovieIntoImagesTransform
+    IProcessConfiguration config) : IMovieIntoImagesTransform
 {
-
-    private readonly int spf = int.Parse(config["SECONDS_PER_FRAME"] ?? "1");
 
     public async Task Transform(string moviePath, string framesPath)
     {
 		var totalSeconds = await GetTimeInSeconds(moviePath);
 
-		if (!Directory.Exists(framesPath))
-			Directory.CreateDirectory(framesPath);
+		CreatePath(framesPath);
 
-		for (int second = 0; second < totalSeconds; second += spf)
+        for (int second = 0; second < totalSeconds; second += config.SecondsPerFrame)
 		{
 			var snapshotFilename = Path.Combine(framesPath, $"snapshot_{second:D5}.jpg");
 
@@ -48,5 +45,17 @@ public class FfmpegMovieIntoImagesTransform(
 
 		return Convert.ToInt32(totalSeconds);
 	}
+
+	private void CreatePath(string path)
+	{
+		logger.LogInformation("Checking path [{path}]", path);
+
+		if (Directory.Exists(path))
+			return;
+
+		logger.LogInformation("Creating path [{path}]", path);
+
+        Directory.CreateDirectory(path);
+    }
 
 }
