@@ -20,9 +20,7 @@ public class PublishUseCase(
 
 		// Validar que o arquivo temporário existe
 		if (string.IsNullOrWhiteSpace(data.TempZipPath) || !File.Exists(data.TempZipPath))
-		{
 			throw new InvalidOperationException("Temp zip file does not exist");
-		}
 
 		// Configurar caminho do zip final
 		pathSetter.Set(data);

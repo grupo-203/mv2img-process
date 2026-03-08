@@ -1,6 +1,5 @@
 using Movie2Image.Process.Application.DTO;
 using Movie2Image.Process.Domain.Entities;
-using Movie2Image.Process.Domain.Enums;
 using Movie2Image.Process.Domain.Exceptions;
 using Movie2Image.Process.Domain.ValueObjects;
 
@@ -21,7 +20,6 @@ public static class ProcessingJobMapper
 		var id = ProcessingJobId.Create(dto.Id);
 		var userId = UserId.Create(dto.UserId);
 		var moviePath = MoviePath.Create(dto.MoviePath);
-
 		var job = ProcessingJob.Create(id, userId, moviePath);
 
 		if (!string.IsNullOrWhiteSpace(dto.FramesPath))
