@@ -1,21 +1,36 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using Moq;
 using Movie2Image.Process.Application.DTO;
 using Movie2Image.Process.Application.UseCases;
+using System.Collections.Generic;
 
 namespace Movie2Image.Process.Application.Test.UseCases;
 
 public class ProcessErrorUseCaseTest : TestBase
 {
 
+    private IConfiguration CreateConfiguration(string? errorMaxRetries = "3")
+    {
+        var dict = new Dictionary<string, string?>
+        {
+            { "FRAMES_PATH", "/tmp/frames" }
+        };
+
+        if (errorMaxRetries != null)
+            dict["ERROR_MAX_RETRIES"] = errorMaxRetries;
+
+        return new ConfigurationBuilder()
+            .AddInMemoryCollection(dict)
+            .Build();
+    }
+
     [Fact]
     public async Task ProcessErrorUseCase_Ok()
     {
         // Arrange
-        var configMock = new Mock<IConfiguration>();
-        configMock.Setup(x => x["ERROR_MAX_RETRIES"]).Returns("3");
-        var useCase = new ProcessErrorUseCase(configMock.Object);
+        var conf = CreateConfiguration("3");
+        var procConfig = new TestProcessConfiguration(conf);
+        var useCase = new ProcessErrorUseCase(procConfig);
         var data = new ProcessMovieDto
         {
             Id = Faker.Random.Guid().ToString(),
@@ -38,9 +53,9 @@ public class ProcessErrorUseCaseTest : TestBase
     public async Task ProcessErrorUseCase_Null_Data()
     {
         // Arrange
-        var configMock = new Mock<IConfiguration>();
-        configMock.Setup(x => x["ERROR_MAX_RETRIES"]).Returns("3");
-        var useCase = new ProcessErrorUseCase(configMock.Object);
+        var conf = CreateConfiguration("3");
+        var procConfig = new TestProcessConfiguration(conf);
+        var useCase = new ProcessErrorUseCase(procConfig);
         var exception = new Exception(Faker.Lorem.Sentence());
 
         // Act
@@ -54,9 +69,9 @@ public class ProcessErrorUseCaseTest : TestBase
     public async Task ProcessErrorUseCase_Null_Exception()
     {
         // Arrange
-        var configMock = new Mock<IConfiguration>();
-        configMock.Setup(x => x["ERROR_MAX_RETRIES"]).Returns("3");
-        var useCase = new ProcessErrorUseCase(configMock.Object);
+        var conf = CreateConfiguration("3");
+        var procConfig = new TestProcessConfiguration(conf);
+        var useCase = new ProcessErrorUseCase(procConfig);
         var data = new ProcessMovieDto
         {
             Id = Faker.Random.Guid().ToString(),
@@ -77,9 +92,9 @@ public class ProcessErrorUseCaseTest : TestBase
     public async Task ProcessErrorUseCase_Max_Retries_Reached()
     {
         // Arrange
-        var configMock = new Mock<IConfiguration>();
-        configMock.Setup(x => x["ERROR_MAX_RETRIES"]).Returns("3");
-        var useCase = new ProcessErrorUseCase(configMock.Object);
+        var conf = CreateConfiguration("3");
+        var procConfig = new TestProcessConfiguration(conf);
+        var useCase = new ProcessErrorUseCase(procConfig);
         var data = new ProcessMovieDto
         {
             Id = Faker.Random.Guid().ToString(),
@@ -102,9 +117,9 @@ public class ProcessErrorUseCaseTest : TestBase
     public async Task ProcessErrorUseCase_Max_Retries_Exceeded()
     {
         // Arrange
-        var configMock = new Mock<IConfiguration>();
-        configMock.Setup(x => x["ERROR_MAX_RETRIES"]).Returns("3");
-        var useCase = new ProcessErrorUseCase(configMock.Object);
+        var conf = CreateConfiguration("3");
+        var procConfig = new TestProcessConfiguration(conf);
+        var useCase = new ProcessErrorUseCase(procConfig);
         var data = new ProcessMovieDto
         {
             Id = Faker.Random.Guid().ToString(),
@@ -127,9 +142,9 @@ public class ProcessErrorUseCaseTest : TestBase
     public async Task ProcessErrorUseCase_One_Retry_Left()
     {
         // Arrange
-        var configMock = new Mock<IConfiguration>();
-        configMock.Setup(x => x["ERROR_MAX_RETRIES"]).Returns("3");
-        var useCase = new ProcessErrorUseCase(configMock.Object);
+        var conf = CreateConfiguration("3");
+        var procConfig = new TestProcessConfiguration(conf);
+        var useCase = new ProcessErrorUseCase(procConfig);
         var data = new ProcessMovieDto
         {
             Id = Faker.Random.Guid().ToString(),
@@ -153,9 +168,9 @@ public class ProcessErrorUseCaseTest : TestBase
     public async Task ProcessErrorUseCase_Default_Max_Retries()
     {
         // Arrange
-        var configMock = new Mock<IConfiguration>();
-        configMock.Setup(x => x["ERROR_MAX_RETRIES"]).Returns((string?)null);
-        var useCase = new ProcessErrorUseCase(configMock.Object);
+        var conf = CreateConfiguration(null);
+        var procConfig = new TestProcessConfiguration(conf);
+        var useCase = new ProcessErrorUseCase(procConfig);
         var data = new ProcessMovieDto
         {
             Id = Faker.Random.Guid().ToString(),
@@ -178,9 +193,9 @@ public class ProcessErrorUseCaseTest : TestBase
     public async Task ProcessErrorUseCase_Custom_Max_Retries()
     {
         // Arrange
-        var configMock = new Mock<IConfiguration>();
-        configMock.Setup(x => x["ERROR_MAX_RETRIES"]).Returns("5");
-        var useCase = new ProcessErrorUseCase(configMock.Object);
+        var conf = CreateConfiguration("5");
+        var procConfig = new TestProcessConfiguration(conf);
+        var useCase = new ProcessErrorUseCase(procConfig);
         var data = new ProcessMovieDto
         {
             Id = Faker.Random.Guid().ToString(),
@@ -204,9 +219,9 @@ public class ProcessErrorUseCaseTest : TestBase
     public async Task ProcessErrorUseCase_Multiple_Tries()
     {
         // Arrange
-        var configMock = new Mock<IConfiguration>();
-        configMock.Setup(x => x["ERROR_MAX_RETRIES"]).Returns("3");
-        var useCase = new ProcessErrorUseCase(configMock.Object);
+        var conf = CreateConfiguration("3");
+        var procConfig = new TestProcessConfiguration(conf);
+        var useCase = new ProcessErrorUseCase(procConfig);
         var data = new ProcessMovieDto
         {
             Id = Faker.Random.Guid().ToString(),

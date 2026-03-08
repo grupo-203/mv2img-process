@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Movie2Image.Process.Application.DTO;
 using Movie2Image.Process.Application.Services;
+using System.Collections.Generic;
 
 namespace Movie2Image.Process.Application.Test.Services;
 
@@ -19,8 +20,9 @@ public class FramesPathSetServiceTest : TestBase
                 { "FRAMES_PATH", basePath }
             })
             .Build();
+        var procConfig = new TestProcessConfiguration(config);
         var data = new ProcessMovieDto();
-        var service = new FramesPathSetService(config);
+        var service = new FramesPathSetService(procConfig);
 
         // Act
         service.Set(data);
@@ -46,9 +48,10 @@ public class FramesPathSetServiceTest : TestBase
                 { "FRAMES_PATH", basePath }
             })
             .Build();
+        var procConfig = new TestProcessConfiguration(config);
         var data1 = new ProcessMovieDto();
         var data2 = new ProcessMovieDto();
-        var service = new FramesPathSetService(config);
+        var service = new FramesPathSetService(procConfig);
 
         // Act
         service.Set(data1);
@@ -67,7 +70,7 @@ public class FramesPathSetServiceTest : TestBase
             .Build();
 
         // Act
-        var act = () => new FramesPathSetService(config);
+        var act = () => new TestProcessConfiguration(config);
 
         // Assert
         act.Should().Throw<ArgumentNullException>()
@@ -86,7 +89,7 @@ public class FramesPathSetServiceTest : TestBase
             .Build();
 
         // Act
-        var act = () => new FramesPathSetService(config);
+        var act = () => new TestProcessConfiguration(config);
 
         // Assert
         act.Should().Throw<ArgumentNullException>()

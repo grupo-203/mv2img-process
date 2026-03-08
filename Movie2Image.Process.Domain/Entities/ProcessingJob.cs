@@ -1,5 +1,6 @@
 using Movie2Image.Process.Domain.Enums;
 using Movie2Image.Process.Domain.ValueObjects;
+using Movie2Image.Process.Domain.Exceptions;
 
 namespace Movie2Image.Process.Domain.Entities;
 
@@ -72,6 +73,12 @@ public class ProcessingJob
 
 	public void IncrementTry()
 	{
+		const int DefaultMaxRetries = 3;
+		if (Tries + 1 > DefaultMaxRetries)
+		{
+			throw new MaxRetriesExceededException($"Maximum retry attempts ({DefaultMaxRetries}) exceeded for processing job {Id}");
+		}
+
 		Tries++;
 	}
 
