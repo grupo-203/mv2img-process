@@ -29,5 +29,5 @@ jobs:
         context: .
         push: true
         tags: |
-          lerrana/mv2img-process:latest
-          lerrana/mv2img-process:${{ steps.tag.outputs.backup }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/mv2img-process:latest
+          ${{ secrets.DOCKERHUB_USERNAME }}/mv2img-process:${{ steps.tag.outputs.backup }}
