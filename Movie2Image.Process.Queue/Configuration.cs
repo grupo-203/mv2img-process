@@ -37,9 +37,14 @@ public static class Configuration
 			var logger = provider.GetRequiredService<ILogger<QueueList>>();
 
 			logger.LogInformation("Trying to create a RabbitMQ connection");
+			
 
-			var config = provider.GetRequiredService<IProcessConfiguration>();
-			var factory = GetFactory(config.RabbitMQConnectionString);
+            var config = provider.GetRequiredService<IProcessConfiguration>();
+			var connectionString = config.RabbitMQConnectionString;
+
+			logger.LogInformation($"RabbitMQ connection string: {connectionString}");
+
+            var factory = GetFactory(connectionString);
 			var connection = factory.CreateConnectionAsync().Result;
 
 			logger.LogInformation("RabbitMQ connection created");
