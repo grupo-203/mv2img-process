@@ -42,8 +42,6 @@ public static class Configuration
             var config = provider.GetRequiredService<IProcessConfiguration>();
 			var connectionString = config.RabbitMQConnectionString;
 
-			//logger.LogInformation($"RabbitMQ connection string: {connectionString}");
-
             var factory = GetFactory(connectionString);
 			var connection = factory.CreateConnectionAsync().Result;
 

@@ -8,7 +8,7 @@ public class TestProcessConfiguration : IProcessConfiguration
     public TestProcessConfiguration(IConfiguration config)
     {
         // FramesPath is required for some tests
-        FramesPath = config["FRAMES_PATH"];
+        FramesPath = config["FRAMES_PATH"]!;
         if (string.IsNullOrWhiteSpace(FramesPath))
             throw new ArgumentNullException("FRAMES_PATH");
 
@@ -32,6 +32,7 @@ public class TestProcessConfiguration : IProcessConfiguration
         MailPassword = config["SMTP_PASSWORD"] ?? string.Empty;
         SecondsPerFrame = int.TryParse(config["SECONDS_PER_FRAME"], out var s) ? s : 1;
         RabbitMQConnectionString = config["RABBITMQ_CONNECTION"] ?? string.Empty;
+        DeliveryServiceUrl = config["DELIVERY_SERVICE_URL"] ?? string.Empty;
     }
 
     public string FramesPath { get; }
@@ -61,4 +62,7 @@ public class TestProcessConfiguration : IProcessConfiguration
     public int SecondsPerFrame { get; }
 
     public string RabbitMQConnectionString { get; }
+
+    public string DeliveryServiceUrl { get; }
+
 }

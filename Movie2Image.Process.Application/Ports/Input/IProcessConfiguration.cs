@@ -13,6 +13,8 @@ public interface IProcessConfiguration
 
     string LoadServiceUrl { get; }
 
+    string DeliveryServiceUrl { get; }
+
     string ClientId { get; }
 
     string ClientSecret { get; }
