@@ -12,6 +12,7 @@ public static class Configuration
 	{
 		services.AddScoped<IAuthService, AuthService>();
 		services.AddScoped<ILoadService, LoadMock>();
+		services.AddScoped<IDeliveryService, DeliveryService>();
 
 		return services;
 	}

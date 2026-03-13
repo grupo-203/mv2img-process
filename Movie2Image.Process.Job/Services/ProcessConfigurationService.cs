@@ -22,6 +22,9 @@ public class ProcessConfigurationService(
     public string LoadServiceUrl => config["LOAD_SERVICE_URL"]
         ?? throw new ArgumentNullException("LOAD_SERVICE_URL"); 
 
+    public string DeliveryServiceUrl => config["DELIVERY_SERVICE_URL"]
+        ?? throw new ArgumentNullException("DELIVERY_SERVICE_URL"); 
+
     public string ClientId => config["CLIENT_ID"]
         ?? throw new ArgumentNullException("CLIENT_ID"); 
 
