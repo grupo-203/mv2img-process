@@ -16,7 +16,7 @@ public class DeliveryService(
         var message = new HttpRequestMessage(HttpMethod.Post, 
             $"{config.DeliveryServiceUrl}/api/downloads/request/{file}");
 
-        message.Headers.Authorization = await authService.Login();
+        //message.Headers.Authorization = await authService.Login();
         message.Content = JsonContent.Create(new
         {
             user_id = userId,
